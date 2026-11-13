@@ -17,7 +17,7 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@code Multiset} implementation with predictable iteration order. Its iterator orders elements
@@ -27,15 +27,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * element will appear at the end of the iteration.
  *
  * <p>See the Guava User Guide article on <a href=
- * "https://github.com/google/guava/wiki/NewCollectionTypesExplained#multiset"> {@code
- * Multiset}</a>.
+ * "https://github.com/google/guava/wiki/NewCollectionTypesExplained#multiset">{@code Multiset}</a>.
  *
  * @author Kevin Bourrillion
  * @author Jared Levy
  * @since 2.0
  */
-@GwtCompatible(serializable = true, emulated = true)
-@ElementTypesAreNonnullByDefault
+@GwtCompatible
 public final class LinkedHashMultiset<E extends @Nullable Object>
     extends AbstractMapBasedMultiset<E> {
 
@@ -52,7 +50,7 @@ public final class LinkedHashMultiset<E extends @Nullable Object>
    * @throws IllegalArgumentException if {@code distinctElements} is negative
    */
   public static <E extends @Nullable Object> LinkedHashMultiset<E> create(int distinctElements) {
-    return new LinkedHashMultiset<E>(distinctElements);
+    return new LinkedHashMultiset<>(distinctElements);
   }
 
   /**
@@ -77,4 +75,6 @@ public final class LinkedHashMultiset<E extends @Nullable Object>
   ObjectCountHashMap<E> newBackingMap(int distinctElements) {
     return new ObjectCountLinkedHashMap<>(distinctElements);
   }
+
+  // TODO(cpovirk): Should we have a serialVersionUID here?
 }

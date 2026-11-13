@@ -15,7 +15,8 @@
 package com.google.common.util.concurrent;
 
 import com.google.common.annotations.GwtIncompatible;
-import javax.annotation.CheckForNull;
+import com.google.common.annotations.J2ktIncompatible;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Unchecked version of {@link java.util.concurrent.TimeoutException}.
@@ -23,20 +24,26 @@ import javax.annotation.CheckForNull;
  * @author Kevin Bourrillion
  * @since 1.0
  */
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public class UncheckedTimeoutException extends RuntimeException {
+  /** Constructs a new {@code UncheckedTimeoutException} with {@code null} as its detail message. */
   public UncheckedTimeoutException() {}
 
-  public UncheckedTimeoutException(@CheckForNull String message) {
+  /** Constructs a new {@code UncheckedTimeoutException} with the specified detail message. */
+  public UncheckedTimeoutException(@Nullable String message) {
     super(message);
   }
 
-  public UncheckedTimeoutException(@CheckForNull Throwable cause) {
+  /** Constructs a new {@code UncheckedTimeoutException} with the specified cause. */
+  public UncheckedTimeoutException(@Nullable Throwable cause) {
     super(cause);
   }
 
-  public UncheckedTimeoutException(@CheckForNull String message, @CheckForNull Throwable cause) {
+  /**
+   * Constructs a new {@code UncheckedTimeoutException} with the specified detail message and cause.
+   */
+  public UncheckedTimeoutException(@Nullable String message, @Nullable Throwable cause) {
     super(message, cause);
   }
 

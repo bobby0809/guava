@@ -22,8 +22,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import javax.annotation.CheckForNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@code Multimap} that cannot hold duplicate key-value pairs. Adding a key-value pair that's
@@ -46,14 +45,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * that affects its {@link Object#equals} behavior. Undefined behavior and bugs will result.
  *
  * <p>See the Guava User Guide article on <a href=
- * "https://github.com/google/guava/wiki/NewCollectionTypesExplained#multimap"> {@code
- * Multimap}</a>.
+ * "https://github.com/google/guava/wiki/NewCollectionTypesExplained#multimap">{@code Multimap}</a>.
  *
  * @author Jared Levy
  * @since 2.0
  */
 @GwtCompatible
-@ElementTypesAreNonnullByDefault
 public interface SetMultimap<K extends @Nullable Object, V extends @Nullable Object>
     extends Multimap<K, V> {
   /**
@@ -75,7 +72,7 @@ public interface SetMultimap<K extends @Nullable Object, V extends @Nullable Obj
    */
   @CanIgnoreReturnValue
   @Override
-  Set<V> removeAll(@CheckForNull Object key);
+  Set<V> removeAll(@Nullable Object key);
 
   /**
    * {@inheritDoc}
@@ -120,5 +117,5 @@ public interface SetMultimap<K extends @Nullable Object, V extends @Nullable Obj
    * empty {@code ListMultimap}.
    */
   @Override
-  boolean equals(@CheckForNull Object obj);
+  boolean equals(@Nullable Object obj);
 }

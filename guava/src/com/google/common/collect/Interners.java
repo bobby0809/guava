@@ -17,12 +17,14 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Equivalence;
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker.Dummy;
 import com.google.common.collect.MapMakerInternalMap.InternalEntry;
-import javax.annotation.CheckForNull;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Contains static methods pertaining to instances of {@link Interner}.
@@ -30,8 +32,8 @@ import javax.annotation.CheckForNull;
  * @author Kevin Bourrillion
  * @since 3.0
  */
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public final class Interners {
   private Interners() {}
 
@@ -40,7 +42,7 @@ public final class Interners {
    *
    * @since 21.0
    */
-  public static class InternerBuilder {
+  public static final class InternerBuilder {
     private final MapMaker mapMaker = new MapMaker();
     private boolean strong = true;
 
@@ -51,6 +53,7 @@ public final class Interners {
      *
      * @see Interners#newStrongInterner()
      */
+    @CanIgnoreReturnValue
     public InternerBuilder strong() {
       this.strong = true;
       return this;
@@ -61,7 +64,7 @@ public final class Interners {
      *
      * @see Interners#newWeakInterner()
      */
-    @GwtIncompatible("java.lang.ref.WeakReference")
+    @CanIgnoreReturnValue
     public InternerBuilder weak() {
       this.strong = false;
       return this;
@@ -72,11 +75,13 @@ public final class Interners {
      *
      * @see MapMaker#concurrencyLevel(int)
      */
+    @CanIgnoreReturnValue
     public InternerBuilder concurrencyLevel(int concurrencyLevel) {
       this.mapMaker.concurrencyLevel(concurrencyLevel);
       return this;
     }
 
+    /** Builds and returns a new interner. */
     public <E> Interner<E> build() {
       if (!strong) {
         mapMaker.weakKeys();
@@ -105,7 +110,6 @@ public final class Interners {
    * likely does not perform as well as {@link #newStrongInterner}, but is the best alternative when
    * the memory usage of that implementation is unacceptable.
    */
-  @GwtIncompatible("java.lang.ref.WeakReference")
   public static <E> Interner<E> newWeakInterner() {
     return newBuilder().weak().build();
   }
@@ -161,11 +165,11 @@ public final class Interners {
     return new InternerFunction<>(checkNotNull(interner));
   }
 
-  private static class InternerFunction<E> implements Function<E, E> {
+  private static final class InternerFunction<E> implements Function<E, E> {
 
     private final Interner<E> interner;
 
-    public InternerFunction(Interner<E> interner) {
+    InternerFunction(Interner<E> interner) {
       this.interner = interner;
     }
 
@@ -180,7 +184,7 @@ public final class Interners {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object other) {
+    public boolean equals(@Nullable Object other) {
       if (other instanceof InternerFunction) {
         InternerFunction<?> that = (InternerFunction<?>) other;
         return interner.equals(that.interner);

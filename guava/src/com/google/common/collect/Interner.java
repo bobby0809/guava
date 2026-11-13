@@ -17,7 +17,7 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtIncompatible;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.errorprone.annotations.DoNotMock;
 
 /**
@@ -32,8 +32,8 @@ import com.google.errorprone.annotations.DoNotMock;
  * @since 3.0
  */
 @DoNotMock("Use Interners.new*Interner")
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public interface Interner<E> {
   /**
    * Chooses and returns the representative instance for any of a collection of instances that are
@@ -47,6 +47,5 @@ public interface Interner<E> {
    *
    * @throws NullPointerException if {@code sample} is null
    */
-  @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
   E intern(E sample);
 }

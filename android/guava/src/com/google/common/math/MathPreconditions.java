@@ -25,9 +25,8 @@ import java.math.RoundingMode;
  * @author Louis Wasserman
  */
 @GwtCompatible
-@CanIgnoreReturnValue
-@ElementTypesAreNonnullByDefault
 final class MathPreconditions {
+  @CanIgnoreReturnValue
   static int checkPositive(String role, int x) {
     if (x <= 0) {
       throw new IllegalArgumentException(role + " (" + x + ") must be > 0");
@@ -35,6 +34,7 @@ final class MathPreconditions {
     return x;
   }
 
+  @CanIgnoreReturnValue
   static long checkPositive(String role, long x) {
     if (x <= 0) {
       throw new IllegalArgumentException(role + " (" + x + ") must be > 0");
@@ -42,6 +42,7 @@ final class MathPreconditions {
     return x;
   }
 
+  @CanIgnoreReturnValue
   static BigInteger checkPositive(String role, BigInteger x) {
     if (x.signum() <= 0) {
       throw new IllegalArgumentException(role + " (" + x + ") must be > 0");
@@ -49,6 +50,7 @@ final class MathPreconditions {
     return x;
   }
 
+  @CanIgnoreReturnValue
   static int checkNonNegative(String role, int x) {
     if (x < 0) {
       throw new IllegalArgumentException(role + " (" + x + ") must be >= 0");
@@ -56,6 +58,7 @@ final class MathPreconditions {
     return x;
   }
 
+  @CanIgnoreReturnValue
   static long checkNonNegative(String role, long x) {
     if (x < 0) {
       throw new IllegalArgumentException(role + " (" + x + ") must be >= 0");
@@ -63,6 +66,7 @@ final class MathPreconditions {
     return x;
   }
 
+  @CanIgnoreReturnValue
   static BigInteger checkNonNegative(String role, BigInteger x) {
     if (x.signum() < 0) {
       throw new IllegalArgumentException(role + " (" + x + ") must be >= 0");
@@ -70,6 +74,7 @@ final class MathPreconditions {
     return x;
   }
 
+  @CanIgnoreReturnValue
   static double checkNonNegative(String role, double x) {
     if (!(x >= 0)) { // not x < 0, to work with NaN.
       throw new IllegalArgumentException(role + " (" + x + ") must be >= 0");

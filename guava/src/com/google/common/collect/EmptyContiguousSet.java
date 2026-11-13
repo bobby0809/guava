@@ -13,21 +13,25 @@
  */
 package com.google.common.collect;
 
+import static com.google.common.collect.Iterators.emptyIterator;
+
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An empty contiguous set.
  *
  * @author Gregory Kick
  */
-@GwtCompatible(emulated = true)
+@GwtCompatible
 @SuppressWarnings("rawtypes") // allow ungenerified Comparable types
-@ElementTypesAreNonnullByDefault
 final class EmptyContiguousSet<C extends Comparable> extends ContiguousSet<C> {
   EmptyContiguousSet(DiscreteDomain<C> domain) {
     super(domain);
@@ -80,25 +84,25 @@ final class EmptyContiguousSet<C extends Comparable> extends ContiguousSet<C> {
   }
 
   @Override
-  public boolean contains(@CheckForNull Object object) {
+  public boolean contains(@Nullable Object object) {
     return false;
   }
 
   @GwtIncompatible // not used by GWT emulation
   @Override
-  int indexOf(@CheckForNull Object target) {
+  int indexOf(@Nullable Object target) {
     return -1;
   }
 
   @Override
   public UnmodifiableIterator<C> iterator() {
-    return Iterators.emptyIterator();
+    return emptyIterator();
   }
 
   @GwtIncompatible // NavigableSet
   @Override
   public UnmodifiableIterator<C> descendingIterator() {
-    return Iterators.emptyIterator();
+    return emptyIterator();
   }
 
   @Override
@@ -122,7 +126,7 @@ final class EmptyContiguousSet<C extends Comparable> extends ContiguousSet<C> {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@Nullable Object object) {
     if (object instanceof Set) {
       Set<?> that = (Set<?>) object;
       return that.isEmpty();
@@ -141,7 +145,8 @@ final class EmptyContiguousSet<C extends Comparable> extends ContiguousSet<C> {
     return 0;
   }
 
-  @GwtIncompatible // serialization
+  @GwtIncompatible
+  @J2ktIncompatible
   private static final class SerializedForm<C extends Comparable> implements Serializable {
     private final DiscreteDomain<C> domain;
 
@@ -156,15 +161,22 @@ final class EmptyContiguousSet<C extends Comparable> extends ContiguousSet<C> {
     private static final long serialVersionUID = 0;
   }
 
-  @GwtIncompatible // serialization
-  @Override
+  @GwtIncompatible
+  @J2ktIncompatible
+    @Override
   Object writeReplace() {
     return new SerializedForm<>(domain);
+  }
+
+  @GwtIncompatible
+  @J2ktIncompatible
+    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+    throw new InvalidObjectException("Use SerializedForm");
   }
 
   @GwtIncompatible // NavigableSet
   @Override
   ImmutableSortedSet<C> createDescendingSet() {
-    return ImmutableSortedSet.emptySet(Ordering.natural().reverse());
+    return ImmutableSortedSet.emptySet(Ordering.<C>natural().reverse());
   }
 }

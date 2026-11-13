@@ -15,12 +15,13 @@
 package com.google.common.util.concurrent;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ForwardingQueue;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link BlockingQueue} which forwards all its method calls to another {@link BlockingQueue}.
@@ -36,9 +37,8 @@ import javax.annotation.CheckForNull;
  * @param <E> the type of elements held in this collection
  * @since 4.0
  */
-@CanIgnoreReturnValue // TODO(cpovirk): Consider being more strict.
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public abstract class ForwardingBlockingQueue<E> extends ForwardingQueue<E>
     implements BlockingQueue<E> {
 
@@ -48,24 +48,27 @@ public abstract class ForwardingBlockingQueue<E> extends ForwardingQueue<E>
   @Override
   protected abstract BlockingQueue<E> delegate();
 
+  @CanIgnoreReturnValue
   @Override
   public int drainTo(Collection<? super E> c, int maxElements) {
     return delegate().drainTo(c, maxElements);
   }
 
+  @CanIgnoreReturnValue
   @Override
   public int drainTo(Collection<? super E> c) {
     return delegate().drainTo(c);
   }
 
+  @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
   public boolean offer(E e, long timeout, TimeUnit unit) throws InterruptedException {
     return delegate().offer(e, timeout, unit);
   }
 
+  @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
-  @CheckForNull
-  public E poll(long timeout, TimeUnit unit) throws InterruptedException {
+  public @Nullable E poll(long timeout, TimeUnit unit) throws InterruptedException {
     return delegate().poll(timeout, unit);
   }
 
@@ -79,6 +82,7 @@ public abstract class ForwardingBlockingQueue<E> extends ForwardingQueue<E>
     return delegate().remainingCapacity();
   }
 
+  @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
   public E take() throws InterruptedException {
     return delegate().take();

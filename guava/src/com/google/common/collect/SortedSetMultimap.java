@@ -24,8 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import javax.annotation.CheckForNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@code SetMultimap} whose set of values for a given key are kept sorted; that is, they comprise
@@ -43,14 +42,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * position in the order of the values). Undefined behavior and bugs will result.
  *
  * <p>See the Guava User Guide article on <a href=
- * "https://github.com/google/guava/wiki/NewCollectionTypesExplained#multimap"> {@code
- * Multimap}</a>.
+ * "https://github.com/google/guava/wiki/NewCollectionTypesExplained#multimap">{@code Multimap}</a>.
  *
  * @author Jared Levy
  * @since 2.0
  */
 @GwtCompatible
-@ElementTypesAreNonnullByDefault
 public interface SortedSetMultimap<K extends @Nullable Object, V extends @Nullable Object>
     extends SetMultimap<K, V> {
   // Following Javadoc copied from Multimap.
@@ -77,7 +74,7 @@ public interface SortedSetMultimap<K extends @Nullable Object, V extends @Nullab
    */
   @CanIgnoreReturnValue
   @Override
-  SortedSet<V> removeAll(@CheckForNull Object key);
+  SortedSet<V> removeAll(@Nullable Object key);
 
   /**
    * Stores a collection of values with the same key, replacing any existing values for that key.
@@ -116,6 +113,5 @@ public interface SortedSetMultimap<K extends @Nullable Object, V extends @Nullab
    * Returns the comparator that orders the multimap values, with {@code null} indicating that
    * natural ordering is used.
    */
-  @CheckForNull
-  Comparator<? super V> valueComparator();
+  @Nullable Comparator<? super V> valueComparator();
 }

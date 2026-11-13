@@ -15,14 +15,15 @@
 package com.google.common.util.concurrent;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.util.concurrent.Platform.restoreInterruptIfIsInterruptedException;
 
-import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A TimeLimiter implementation which actually does not attempt to limit time at all. This may be
@@ -34,11 +35,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Jens Nyman
  * @since 1.0
  */
-@Beta
-@CanIgnoreReturnValue
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public final class FakeTimeLimiter implements TimeLimiter {
+  /** Creates a new {@link FakeTimeLimiter}. */
+  public FakeTimeLimiter() {}
+
+  @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
   public <T> T newProxy(
       T target, Class<T> interfaceType, long timeoutDuration, TimeUnit timeoutUnit) {
@@ -48,6 +51,7 @@ public final class FakeTimeLimiter implements TimeLimiter {
     return target; // ha ha
   }
 
+  @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
   @ParametricNullness
   public <T extends @Nullable Object> T callWithTimeout(
@@ -59,16 +63,14 @@ public final class FakeTimeLimiter implements TimeLimiter {
     } catch (RuntimeException e) {
       throw new UncheckedExecutionException(e);
     } catch (Exception e) {
+      restoreInterruptIfIsInterruptedException(e);
       throw new ExecutionException(e);
     } catch (Error e) {
       throw new ExecutionError(e);
-    } catch (Throwable e) {
-      // It's a non-Error, non-Exception Throwable. Such classes are usually intended to extend
-      // Exception, so we'll treat it like an Exception.
-      throw new ExecutionException(e);
     }
   }
 
+  @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
   @ParametricNullness
   public <T extends @Nullable Object> T callUninterruptiblyWithTimeout(
@@ -77,19 +79,16 @@ public final class FakeTimeLimiter implements TimeLimiter {
   }
 
   @Override
+  @SuppressWarnings("CatchingUnchecked") // sneaky checked exception
   public void runWithTimeout(Runnable runnable, long timeoutDuration, TimeUnit timeoutUnit) {
     checkNotNull(runnable);
     checkNotNull(timeoutUnit);
     try {
       runnable.run();
-    } catch (RuntimeException e) {
+    } catch (Exception e) { // sneaky checked exception
       throw new UncheckedExecutionException(e);
     } catch (Error e) {
       throw new ExecutionError(e);
-    } catch (Throwable e) {
-      // It's a non-Error, non-Exception Throwable. Such classes are usually intended to extend
-      // Exception, so we'll treat it like a RuntimeException.
-      throw new UncheckedExecutionException(e);
     }
   }
 
